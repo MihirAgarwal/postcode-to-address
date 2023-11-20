@@ -18,57 +18,83 @@ const PostcodeForm = () => {
         if (postcode) {
           // Replace 'YOUR_API_ENDPOINT' with the actual API URL
           var response;
-            if (api === 'PostalPinCode') {
-                response = await fetch(`https://api.postalpincode.in/pincode/${postcode}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if(data[0].Status === 'Error') setPostCodeError('Please Enter a valid postcode');
-                    else {
-                        setPostCodeError('');
-                        setState(data[0].PostOffice[0].Circle);
-                        setProvince(data[0].PostOffice[0].District);
-                        setCity(data[0].PostOffice[0].Name);
-                    }
-                } else {
-                    console.error('API request failed');
-                    setPostCodeError('Please enter a valid postcode');
-                }
+          response = await fetch('http://localhost:8080/fetchDetails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                api: api,
+                postcode: postcode,
+                country: country
+            }),
+        });
+
+        if (response.ok) {
+          console.log("OK Response");
+            const data = await response.json();
+            if (data[0].Status === 'Error') setPostCodeError('Please Enter a valid postcode');
+            else {
+                setPostCodeError('');
+                setState(data[0].PostOffice[0].Circle);
+                setProvince(data[0].PostOffice[0].District);
+                setCity(data[0].PostOffice[0].Name);
             }
-            else if (api === 'DataGov'){
-                response = await fetch(`https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=json&&filters%5Bpincode%5D=${postcode}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if(data.records.length === 0) setPostCodeError('Please Enter a valid postcode');
-                    else {
-                        setPostCodeError('');
-                        setState(data.records[0].statename);
-                        setProvince(data.records[0].districtname);
-                        setCity(data.records[0].officename);
-                    }
-                } else {
-                    console.error('API request failed');
-                    setPostCodeError('Please enter a valid postcode');
-                }
-            }
-            else if (api === 'ZipCodeBase'){
-                if(countries.hasOwnProperty(country)){
-                    response = await fetch(`https://app.zipcodebase.com/api/v1/search?apikey=780122d0-76f3-11ee-ac0a-d1e21fb94706&codes=${postcode}&country=${countries[country]}`);
-                    if (response.ok) {
-                        var data = await response.json();
-                        data = data.results;
-                        if(data.length === 0) setPostCodeError('Please Enter a valid postcode');
-                        else{
-                            data = data[postcode];
-                            setPostCodeError('');
-                            setState(data[0].state);
-                            setProvince(data[0].province);
-                            setCity(data[0].city);
-                        }
-                    } else {
-                        console.error('API request failed');
-                    }
-                }
-            }
+        } else {
+            console.error('API request failed');
+            setPostCodeError('Please enter a valid postcode');
+        }
+            // if (api === 'PostalPinCode') {
+            //     response = await fetch(`https://api.postalpincode.in/pincode/${postcode}`);
+            //     if (response.ok) {
+            //         const data = await response.json();
+            //         if(data[0].Status === 'Error') setPostCodeError('Please Enter a valid postcode');
+            //         else {
+            //             setPostCodeError('');
+            //             setState(data[0].PostOffice[0].Circle);
+            //             setProvince(data[0].PostOffice[0].District);
+            //             setCity(data[0].PostOffice[0].Name);
+            //         }
+            //     } else {
+            //         console.error('API request failed');
+            //         setPostCodeError('Please enter a valid postcode');
+            //     }
+            // }
+            // else if (api === 'DataGov'){
+            //     response = await fetch(`https://api.data.gov.in/resource/6176ee09-3d56-4a3b-8115-21841576b2f6?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=json&&filters%5Bpincode%5D=${postcode}`);
+            //     if (response.ok) {
+            //         const data = await response.json();
+            //         if(data.records.length === 0) setPostCodeError('Please Enter a valid postcode');
+            //         else {
+            //             setPostCodeError('');
+            //             setState(data.records[0].statename);
+            //             setProvince(data.records[0].districtname);
+            //             setCity(data.records[0].officename);
+            //         }
+            //     } else {
+            //         console.error('API request failed');
+            //         setPostCodeError('Please enter a valid postcode');
+            //     }
+            // }
+            // else if (api === 'ZipCodeBase'){
+            //     if(countries.hasOwnProperty(country)){
+            //         response = await fetch(`https://app.zipcodebase.com/api/v1/search?apikey=780122d0-76f3-11ee-ac0a-d1e21fb94706&codes=${postcode}&country=${countries[country]}`);
+            //         if (response.ok) {
+            //             var data = await response.json();
+            //             data = data.results;
+            //             if(data.length === 0) setPostCodeError('Please Enter a valid postcode');
+            //             else{
+            //                 data = data[postcode];
+            //                 setPostCodeError('');
+            //                 setState(data[0].state);
+            //                 setProvince(data[0].province);
+            //                 setCity(data[0].city);
+            //             }
+            //         } else {
+            //             console.error('API request failed');
+            //         }
+            //     }
+            // }
         }
       } catch (error) {
         console.error('An error occurred:', error);
