@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/postcode-to-address/static/js/main.7e3c0ecc.js",
+    "main.js": "/postcode-to-address/static/js/main.330a45a1.js",
     "index.html": "/postcode-to-address/index.html",
-    "main.7e3c0ecc.js.map": "/postcode-to-address/static/js/main.7e3c0ecc.js.map"
+    "main.330a45a1.js.map": "/postcode-to-address/static/js/main.330a45a1.js.map"
   },
   "entrypoints": [
-    "static/js/main.7e3c0ecc.js"
+    "static/js/main.330a45a1.js"
   ]
 }
